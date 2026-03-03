@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Client Intake — Real Estate</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --bg: #f9f7fd;
+  --surface: #ffffff;
+  --surface2: #f3effc;
+  --border: #e2d9f3;
+  --gold: #a8782a;
+  --gold-mid: #c9973a;
+  --gold-dim: #d4aa5a;
+  --gold-light: #fdf3e0;
+  --gold-accent: #b8860b;
+  --purple: #4a1e8c;
+  --purple-deep: #360f6e;
+  --purple-light: #6b3dc4;
+  --purple-pale: #ede6fb;
+  --purple-soft: #f5f0ff;
+  --text: #1a0f33;
+  --text-on-purple: #ffffff;
+  --muted: #9580c0;
+  --muted2: #6b50a8;
+  --error: #b91c1c;
+  --green: #15803d;
+  --r: 8px;
+}
+
+html { font-size: 15px; scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  background-image: 
+    radial-gradient(ellipse at 10% 0%, rgba(74,30,140,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 95%, rgba(184,134,11,0.05) 0%, transparent 50%);
+}
+
+/* ── Layout ─────────────────────────────── */
+.layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────── */
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: var(--purple-deep);
+  background-image: 
+    linear-gradient(160deg, #5a28a8 0%, #2a0a58 60%, #1e0840 100%);
+  border-right: none;
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: 6px 0 40px rgba(54,15,110,0.22);
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 48px;
+}
+
+.brand-mark {
+  width: 38px; height: 38px;
+  border: 1.5px solid var(--gold-dim);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  color: var(--gold-dim);
+  background: rgba(212,170,90,0.1);
+}
+
+.brand-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.brand-name span { display: block; font-size: 0.7rem; color: rgba(255,255,255,0.5); font-family: 'Outfit', sans-serif; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; }
+
+.progress-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 20px;
+}
+
+.steps-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+}
+
+.nav-section {
+  position: relative;
+}
+
+.nav-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 10px 0;
+  opacity: 0.4;
+  transition: opacity 0.3s;
+  cursor: default;
+}
+
+.nav-item.active { opacity: 1; }
+.nav-item.done { opacity: 0.75; }
+
+.nav-dot-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 3px;
+}
+
+.nav-dot {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.nav-item.active .nav-dot {
+  border-color: var(--gold-dim);
+  background: linear-gradient(135deg, var(--gold-mid), var(--gold-dim));
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(184,134,11,0.35);
+}
+
+.nav-item.done .nav-dot {
+  border-color: rgba(212,170,90,0.6);
+  background: rgba(212,170,90,0.2);
+  color: var(--gold-dim);
+  font-size: 11px;
+}
+
+.nav-line {
+  width: 1px;
+  flex: 1;
+  min-height: 18px;
+  background: rgba(255,255,255,0.15);
+  margin: 3px 0;
+}
+
+.nav-text { flex: 1; }
+.nav-text strong {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.3;
+}
+.nav-item.active .nav-text strong { color: var(--gold-dim); }
+.nav-text small {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 300;
+}
+
+.sidebar-footer {
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.6;
+}
+.sidebar-footer a { color: var(--gold-dim); text-decoration: none; }
+
+/* ── Main ─────────────────────────────── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.form-header {
+  padding: 44px 56px 32px;
+  border-bottom: 1px solid var(--border);
+  background: #ffffff;
+  background-image: linear-gradient(135deg, rgba(74,30,140,0.02) 0%, transparent 70%);
+}
+
+.form-header .step-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-accent);
+  margin-bottom: 14px;
+}
+
+.form-header .step-badge::before {
+  content: '';
+  display: block;
+  width: 28px; height: 1.5px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-dim));
+}
+
+.form-header h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  font-weight: 300;
+  line-height: 1.15;
+  color: var(--text);
+}
+
+.form-header h1 em { font-style: italic; color: var(--purple); }
+.form-header p {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+/* Progress bar */
+.progress-track {
+  height: 3px;
+  background: var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background: linear-gradient(90deg, var(--purple-light), var(--gold-mid));
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 0 8px rgba(168,120,42,0.3);
+}
+
+/* ── Scroll container ─────────────────────────────── */
+.form-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 48px 56px 64px;
+  position: relative;
+  background: var(--bg);
+  background-image: 
+    radial-gradient(ellipse at 95% 5%, rgba(74,30,140,0.04) 0%, transparent 45%),
+    radial-gradient(ellipse at 5% 95%, rgba(184,134,11,0.03) 0%, transparent 45%);
+}
+
+/* ── Panels ─────────────────────────────── */
+.panel {
+  display: none;
+  animation: slideIn 0.4s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+
+.panel.active { display: block; }
+.panel.exit { animation: slideOut 0.3s cubic-bezier(0.4,0,0.2,1) forwards; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-28px); }
+}
+@keyframes slideInBack {
+  from { opacity: 0; transform: translateX(-28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.panel.back-enter { animation: slideInBack 0.4s cubic-bezier(0.4,0,0.2,1) forwards; }
+
+/* ── Section header ─────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.section-icon {
+  width: 46px; height: 46px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--purple-soft), var(--purple-pale));
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 21px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(74,30,140,0.08);
+}
+
+.section-title h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--purple);
+}
+
+.section-title p {
+  font-size: 12.5px;
+  color: var(--muted2);
+  margin-top: 2px;
+  font-weight: 300;
+}
+
+/* ── Field groups ─────────────────────────────── */
+.field-grid {
+  display: grid;
+  gap: 28px;
+}
+
+.col-2 { grid-template-columns: 1fr 1fr; }
+.col-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field.span-2 { grid-column: span 2; }
+.field.span-3 { grid-column: span 3; }
+
+label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted2);
+}
+
+label .req { color: var(--gold); margin-left: 2px; }
+
+input[type=text],
+input[type=email],
+input[type=tel],
+input[type=number],
+select,
+textarea {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  padding: 12px 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  -webkit-appearance: none;
+  box-shadow: 0 1px 3px rgba(74,30,140,0.04);
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--purple-light);
+  box-shadow: 0 0 0 3px rgba(107,61,196,0.12), 0 1px 3px rgba(74,30,140,0.04);
+}
+
+input::placeholder, textarea::placeholder { color: #c0b8d8; }
+textarea { resize: vertical; min-height: 90px; }
+select { cursor: pointer; }
+select option { background: #fff; color: var(--text); }
+
+/* ── Chips ─────────────────────────────── */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips input { display: none; }
+
+.chip {
+  padding: 8px 16px;
+  border-radius: 40px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted2);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.chip:hover {
+  border-color: var(--purple-light);
+  color: var(--purple);
+}
+
+.chips input:checked + .chip {
+  border-color: var(--purple);
+  background: var(--purple-pale);
+  color: var(--purple);
+  font-weight: 500;
+  box-shadow: 0 0 0 1px rgba(74,30,140,0.15);
+}
+
+/* ── Toggle yes/no ─────────────────────────────── */
+.toggle-group { display: flex; gap: 8px; }
+.toggle-group input { display: none; }
+.toggle-btn {
+  padding: 10px 24px;
+  border-radius: var(--r);
+  border: 1.5px solid var(--border);
+  background: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted2);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(74,30,140,0.04);
+}
+
+.toggle-btn:hover { border-color: var(--purple-light); color: var(--purple); }
+
+.toggle-group input:checked + .toggle-btn {
+  border-color: var(--purple);
+  background: var(--purple-pale);
+  color: var(--purple);
+  font-weight: 600;
+  box-shadow: 0 0 0 1px rgba(74,30,140,0.15);
+}
+
+/* ── Range slider ─────────────────────────────── */
+.range-display {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--purple);
+  margin-bottom: 6px;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  height: 20px;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-mid), var(--gold));
+  margin-top: -7.5px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(168,120,42,0.35);
+}
+
+/* ── Seriousness meter ─────────────────────────────── */
+.serious-meter {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.serious-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+/* ── Divider ─────────────────────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 36px 0;
+}
+
+/* ── Errors ─────────────────────────────── */
+.err {
+  font-size: 11px;
+  color: var(--error);
+  margin-top: 4px;
+  display: none;
+}
+.field.has-error input,
+.field.has-error select,
+.field.has-error textarea {
+  border-color: var(--error);
+  background: #fff8f8;
+}
+.field.has-error .err { display: block; }
+
+/* ── Conditional reveal ─────────────────────────────── */
+.cond {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease;
+  pointer-events: none;
+}
+.cond.open {
+  max-height: 1200px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Buttons ─────────────────────────────── */
+.btn-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 48px;
+  gap: 12px;
+}
+
+.btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 36px;
+  border: 1.5px solid transparent;
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #c9973a, #a8782a);
+  color: #ffffff;
+  border-color: #a8782a;
+  box-shadow: 0 3px 14px rgba(168,120,42,0.3);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #d4aa5a, #c9973a);
+  border-color: #c9973a;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(168,120,42,0.38);
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: var(--muted2);
+  border-color: var(--border);
+  box-shadow: 0 1px 3px rgba(74,30,140,0.06);
+}
+
+.btn-secondary:hover {
+  color: var(--purple);
+  border-color: var(--purple-light);
+  background: var(--purple-soft);
+}
+
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+/* ── Client type cards ─────────────────────────────── */
+.type-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.type-cards input { display: none; }
+
+.type-card {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  padding: 24px 20px;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  user-select: none;
+  box-shadow: 0 1px 4px rgba(75,46,131,0.05);
+}
+
+.type-card:hover {
+  border-color: var(--purple-light);
+  background: var(--purple-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(74,30,140,0.1);
+}
+
+.type-cards input:checked + .type-card {
+  border-color: var(--purple);
+  background: var(--purple-pale);
+  box-shadow: 0 0 0 3px rgba(74,30,140,0.12), 0 4px 16px rgba(74,30,140,0.1);
+}
+
+.type-card .type-icon { font-size: 28px; }
+.type-card .type-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--purple);
+}
+.type-card .type-desc { font-size: 12px; color: var(--muted2); font-weight: 300; line-height: 1.5; }
+
+/* ── Confirmation ─────────────────────────────── */
+.confirm-screen {
+  text-align: center;
+  padding: 80px 0;
+}
+
+.confirm-checkmark {
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  border: 2px solid var(--gold-mid);
+  background: linear-gradient(135deg, var(--gold-light), #fff9ee);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 32px;
+  font-size: 30px;
+  color: var(--gold-accent);
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  box-shadow: 0 4px 20px rgba(168,120,42,0.2);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.confirm-screen h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem;
+  font-weight: 300;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.confirm-screen h2 em { font-style: italic; color: var(--purple); }
+
+.confirm-screen p {
+  font-size: 14px;
+  color: var(--muted2);
+  line-height: 1.8;
+  font-weight: 300;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* ── Setup notice ─────────────────────────────── */
+.setup-notice {
+  background: var(--gold-light);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--r);
+  padding: 14px 18px;
+  margin-bottom: 36px;
+  font-size: 12px;
+  color: #5a3e10;
+  line-height: 1.6;
+}
+
+.setup-notice a { color: var(--purple); text-decoration: none; font-weight: 500; }
+.setup-notice code { background: rgba(0,0,0,0.07); padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .form-header, .form-body { padding-left: 28px; padding-right: 28px; }
+  .col-2, .col-3 { grid-template-columns: 1fr; }
+  .field.span-2, .field.span-3 { grid-column: span 1; }
+  .type-cards { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .form-header, .form-body { padding-left: 20px; padding-right: 20px; }
+  .type-cards { grid-template-columns: 1fr; }
+  .btn-row { flex-direction: column-reverse; }
+  .btn { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ── Sidebar ───────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-mark">R</div>
+    <div class="brand-name">
+      Your Name
+      <span>Real Estate</span>
+    </div>
+  </div>
+
+  <p class="progress-label">Your progress</p>
+
+  <div class="steps-nav" id="stepsNav">
+    <!-- dynamically filled -->
+  </div>
+
+  <div class="sidebar-footer">
+    Your information is kept confidential.<br>
+    Questions? <a href="mailto:you@example.com">Contact us</a>
+  </div>
+</aside>
+
+<!-- ── Main ───────────────────────────── -->
+<main class="main">
+  <div class="form-header">
+    <div class="step-badge" id="stepBadge">Step 1 of 3</div>
+    <h1 id="pageTitle">Let's get to <em>know you.</em></h1>
+    <p id="pageSubtitle">A few quick details to get us started.</p>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:5%"></div></div>
+
+  <div class="form-body">
+    <div class="setup-notice" id="setupNotice">
+      ⚙️ <strong>Setup:</strong> Replace <code>mykdrzgz</code> in the HTML with your free <a href="https://formspree.io" target="_blank">Formspree</a> form ID to receive submissions by email.
+    </div>
+
+    <form id="theForm" action="https://formspree.io/f/mykdrzgz" method="POST" novalidate>
+
+    <!-- ══ PANEL 0: Basic Info ══ -->
+    <div class="panel active" id="panel-0">
+      <div class="section-header">
+        <div class="section-icon">👤</div>
+        <div class="section-title">
+          <h2>Your Information</h2>
+          <p>Basic contact details — this stays between us.</p>
+        </div>
+      </div>
+
+      <div class="field-grid col-2">
+        <div class="field" id="f-fullName">
+          <label>Full Legal Name <span class="req">*</span></label>
+          <input type="text" name="fullName" id="fullName" placeholder="Jane Smith" />
+          <span class="err">Please enter your full name.</span>
+        </div>
+        <div class="field" id="f-phone">
+          <label>Phone Number <span class="req">*</span></label>
+          <input type="tel" name="phone" id="phone" placeholder="(832) 555-0100" />
+          <span class="err">Please enter a phone number.</span>
+        </div>
+        <div class="field" id="f-email">
+          <label>Email Address <span class="req">*</span></label>
+          <input type="email" name="email" id="email" placeholder="jane@example.com" />
+          <span class="err">Please enter a valid email.</span>
+        </div>
+        <div class="field">
+          <label>Preferred Contact Method</label>
+          <select name="contactMethod">
+            <option value="">— Select —</option>
+            <option>Call</option>
+            <option>Text</option>
+            <option>Email</option>
+            <option>WhatsApp</option>
+          </select>
+        </div>
+        <div class="field span-2">
+          <label>Current Address</label>
+          <input type="text" name="address" placeholder="123 Main St, Houston, TX 77001" />
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field-grid">
+        <div class="field">
+          <label>Are you currently working with another agent?</label>
+          <div class="toggle-group">
+            <input type="radio" name="otherAgent" id="oa-no" value="No" />
+            <label for="oa-no" class="toggle-btn">No</label>
+            <input type="radio" name="otherAgent" id="oa-yes" value="Yes" />
+            <label for="oa-yes" class="toggle-btn">Yes</label>
+          </div>
+        </div>
+        <div class="cond" id="cond-otherAgent">
+          <div class="field" style="margin-top:12px">
+            <label>Agent's name or brokerage</label>
+            <input type="text" name="otherAgentName" placeholder="Agent name / Brokerage" />
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <span></span>
+        <button type="button" class="btn btn-primary" onclick="next()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══ PANEL 1: Client Type ══ -->
+    <div class="panel" id="panel-1">
+      <div class="section-header">
+        <div class="section-icon">🏡</div>
+        <div class="section-title">
+          <h2>Client Type</h2>
+          <p>This helps us tailor the rest of your experience.</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What best describes you? <span class="req">*</span></label>
+        <div class="type-cards" id="typeCards">
+          <input type="radio" name="clientType" id="ct-buyer" value="Buyer" onchange="setClientType('buyer')" />
+          <label for="ct-buyer" class="type-card">
+            <span class="type-icon">🔑</span>
+            <span class="type-name">Buyer</span>
+            <span class="type-desc">I'm looking to purchase a home or investment property.</span>
+          </label>
+
+          <input type="radio" name="clientType" id="ct-seller" value="Seller" onchange="setClientType('seller')" />
+          <label for="ct-seller" class="type-card">
+            <span class="type-icon">🏷️</span>
+            <span class="type-name">Seller</span>
+            <span class="type-desc">I want to list and sell my property.</span>
+          </label>
+
+          <input type="radio" name="clientType" id="ct-landlord" value="Landlord" onchange="setClientType('landlord')" />
+          <label for="ct-landlord" class="type-card">
+            <span class="type-icon">🏢</span>
+            <span class="type-name">Landlord</span>
+            <span class="type-desc">I own a property I want to rent out.</span>
+          </label>
+
+          <input type="radio" name="clientType" id="ct-tenant" value="Tenant" onchange="setClientType('tenant')" />
+          <label for="ct-tenant" class="type-card">
+            <span class="type-icon">🪴</span>
+            <span class="type-name">Tenant</span>
+            <span class="type-desc">I'm looking for a rental property.</span>
+          </label>
+        </div>
+        <span class="err" id="typeErr" style="display:none;color:var(--error);font-size:11px;margin-top:8px">Please select a client type.</span>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="button" class="btn btn-primary" onclick="next()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══ BUYER PANELS ══ -->
+
+    <!-- B0: Financing -->
+    <div class="panel" id="panel-buyer-0">
+      <div class="section-header">
+        <div class="section-icon">💳</div>
+        <div class="section-title"><h2>Financing</h2><p>Help me understand your buying power.</p></div>
+      </div>
+      <div class="field-grid col-2">
+        <div class="field">
+          <label>Are you pre-approved for a mortgage?</label>
+          <div class="toggle-group">
+            <input type="radio" name="preApproved" id="pa-yes" value="Yes" onchange="toggleCond('cond-lender', true)" />
+            <label for="pa-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="preApproved" id="pa-no" value="No" onchange="toggleCond('cond-lender', false)" />
+            <label for="pa-no" class="toggle-btn">No</label>
+            <input type="radio" name="preApproved" id="pa-working" value="In progress" onchange="toggleCond('cond-lender', false)" />
+            <label for="pa-working" class="toggle-btn">In Progress</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Purchase Type</label>
+          <div class="chips">
+            <input type="radio" name="purchaseType" id="pu-primary" value="Primary Residence" /><label for="pu-primary" class="chip">Primary Residence</label>
+            <input type="radio" name="purchaseType" id="pu-invest" value="Investment" /><label for="pu-invest" class="chip">Investment</label>
+            <input type="radio" name="purchaseType" id="pu-second" value="Second Home" /><label for="pu-second" class="chip">Second Home</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="cond" id="cond-lender">
+        <div class="field-grid col-2" style="margin-top:20px">
+          <div class="field">
+            <label>Lender Name</label>
+            <input type="text" name="lenderName" placeholder="Bank / Lender name" />
+          </div>
+          <div class="field">
+            <label>Lender Contact</label>
+            <input type="text" name="lenderContact" placeholder="Name or phone" />
+          </div>
+        </div>
+      </div>
+
+      <div class="field-grid col-2" style="margin-top:24px">
+        <div class="field">
+          <label>Estimated Budget Range</label>
+          <select name="budgetRange">
+            <option value="">— Select —</option>
+            <option>Under $150,000</option>
+            <option>$150,000 – $250,000</option>
+            <option>$250,000 – $400,000</option>
+            <option>$400,000 – $600,000</option>
+            <option>$600,000 – $900,000</option>
+            <option>$900,000 – $1.5M</option>
+            <option>$1.5M+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Down Payment Amount or %</label>
+          <input type="text" name="downPayment" placeholder="e.g. $40,000 or 20%" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="button" class="btn btn-primary" onclick="next()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- B1: Timeline -->
+    <div class="panel" id="panel-buyer-1">
+      <div class="section-header">
+        <div class="section-icon">📅</div>
+        <div class="section-title"><h2>Timeline</h2><p>When are you hoping to move?</p></div>
+      </div>
+      <div class="field-grid">
+        <div class="field">
+          <label>When do you want to buy?</label>
+          <div class="chips">
+            <input type="radio" name="buyTimeline" id="bt-now" value="ASAP" /><label for="bt-now" class="chip">ASAP</label>
+            <input type="radio" name="buyTimeline" id="bt-1-3" value="1–3 months" /><label for="bt-1-3" class="chip">1–3 months</label>
+            <input type="radio" name="buyTimeline" id="bt-3-6" value="3–6 months" /><label for="bt-3-6" class="chip">3–6 months</label>
+            <input type="radio" name="buyTimeline" id="bt-6p" value="6+ months" /><label for="bt-6p" class="chip">6+ months</label>
+            <input type="radio" name="buyTimeline" id="bt-flex" value="Just exploring" /><label for="bt-flex" class="chip">Just exploring</label>
+          </div>
+        </div>
+        <div class="field-grid col-2">
+          <div class="field">
+            <label>Is your lease ending soon?</label>
+            <div class="toggle-group">
+              <input type="radio" name="leaseEnding" id="le-yes" value="Yes" /><label for="le-yes" class="toggle-btn">Yes</label>
+              <input type="radio" name="leaseEnding" id="le-no" value="No" /><label for="le-no" class="toggle-btn">No</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Do you need to sell a home first?</label>
+            <div class="toggle-group">
+              <input type="radio" name="sellFirst" id="sf-yes" value="Yes" /><label for="sf-yes" class="toggle-btn">Yes</label>
+              <input type="radio" name="sellFirst" id="sf-no" value="No" /><label for="sf-no" class="toggle-btn">No</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="button" class="btn btn-primary" onclick="next()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- B2: Property Preferences -->
+    <div class="panel" id="panel-buyer-2">
+      <div class="section-header">
+        <div class="section-icon">🗺️</div>
+        <div class="section-title"><h2>Property Preferences</h2><p>Tell me what your dream home looks like.</p></div>
+      </div>
+      <div class="field-grid col-2">
+        <div class="field span-2">
+          <label>Preferred Cities or Zip Codes</label>
+          <input type="text" name="preferredAreas" placeholder="e.g. Houston, Richmond, 77479" />
+        </div>
+        <div class="field">
+          <label>Minimum Bedrooms</label>
+          <select name="minBeds">
+            <option value="">No preference</option>
+            <option>1+</option><option>2+</option><option>3+</option><option>4+</option><option>5+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Minimum Bathrooms</label>
+          <select name="minBaths">
+            <option value="">No preference</option>
+            <option>1+</option><option>1.5+</option><option>2+</option><option>2.5+</option><option>3+</option><option>4+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Minimum Square Footage</label>
+          <select name="minSqft">
+            <option value="">No preference</option>
+            <option>800 sq ft</option><option>1,200 sq ft</option><option>1,600 sq ft</option>
+            <option>2,000 sq ft</option><option>2,500 sq ft</option><option>3,000 sq ft</option><option>4,000+ sq ft</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Lot Size Preference</label>
+          <select name="lotSize">
+            <option value="">No preference</option>
+            <option>Small / Townhome</option><option>Standard (5,000–8,000 sq ft)</option>
+            <option>Large (8,000+ sq ft)</option><option>Acreage / Rural</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>HOA</label>
+          <div class="chips">
+            <input type="radio" name="hoa" id="hoa-yes" value="Yes" /><label for="hoa-yes" class="chip">OK with HOA</label>
+            <input type="radio" name="hoa" id="hoa-no" value="No" /><label for="hoa-no" class="chip">No HOA</label>
+            <input type="radio" name="hoa" id="hoa-any" value="No preference" /><label for="hoa-any" class="chip">No preference</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>School District Preference</label>
+          <input type="text" name="schoolDistrict" placeholder="e.g. Fort Bend ISD, Katy ISD" />
+        </div>
+        <div class="field span-2">
+          <label>Must-Have Features</label>
+          <div class="chips">
+            <input type="checkbox" name="mustHave" id="mh-pool" value="Pool" /><label for="mh-pool" class="chip">Pool</label>
+            <input type="checkbox" name="mustHave" id="mh-garage" value="Garage" /><label for="mh-garage" class="chip">Garage</label>
+            <input type="checkbox" name="mustHave" id="mh-newconstruction" value="New Construction" /><label for="mh-newconstruction" class="chip">New Construction</label>
+            <input type="checkbox" name="mustHave" id="mh-office" value="Home Office" /><label for="mh-office" class="chip">Home Office</label>
+            <input type="checkbox" name="mustHave" id="mh-master" value="Downstairs Master" /><label for="mh-master" class="chip">Downstairs Master</label>
+            <input type="checkbox" name="mustHave" id="mh-gameroom" value="Game Room" /><label for="mh-gameroom" class="chip">Game Room</label>
+            <input type="checkbox" name="mustHave" id="mh-mudroom" value="Mud Room" /><label for="mh-mudroom" class="chip">Mud Room</label>
+          </div>
+        </div>
+        <div class="field span-2">
+          <label>Deal Breakers</label>
+          <input type="text" name="dealBreakers" placeholder="e.g. no carpet, not on a main road, not in a flood zone" />
+        </div>
+      </div>
+
+      <hr class="divider" />
+      <p style="font-size:12px;color:var(--muted2);margin-bottom:20px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase">Houston/Richmond Add-Ons</p>
+      <div class="field-grid col-2">
+        <div class="field">
+          <label>Flood Zone Comfort</label>
+          <div class="chips">
+            <input type="radio" name="floodZone" id="fz-no" value="No flood zone" /><label for="fz-no" class="chip">No flood zone</label>
+            <input type="radio" name="floodZone" id="fz-ok" value="Acceptable with disclosure" /><label for="fz-ok" class="chip">OK with disclosure</label>
+            <input type="radio" name="floodZone" id="fz-any" value="Not a concern" /><label for="fz-any" class="chip">Not a concern</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>MUD Tax Areas — OK with higher tax rates?</label>
+          <div class="toggle-group">
+            <input type="radio" name="mudTax" id="mud-yes" value="Yes" /><label for="mud-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="mudTax" id="mud-no" value="No" /><label for="mud-no" class="toggle-btn">No</label>
+            <input type="radio" name="mudTax" id="mud-idk" value="Need to learn more" /><label for="mud-idk" class="toggle-btn">Tell me more</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>HOA Fee Comfort Range (monthly)</label>
+          <select name="hoaFeeComfort">
+            <option value="">— Select —</option>
+            <option>$0 – $50</option><option>$50 – $150</option><option>$150 – $300</option><option>$300+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Interested in New Construction?</label>
+          <div class="toggle-group">
+            <input type="radio" name="newConstruction" id="nc-yes" value="Yes" /><label for="nc-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="newConstruction" id="nc-no" value="No" /><label for="nc-no" class="toggle-btn">No</label>
+            <input type="radio" name="newConstruction" id="nc-both" value="Open to both" /><label for="nc-both" class="toggle-btn">Either</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="button" class="btn btn-primary" onclick="next()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- B3: Motivation + Decision Style -->
+    <div class="panel" id="panel-buyer-3">
+      <div class="section-header">
+        <div class="section-icon">💬</div>
+        <div class="section-title"><h2>Your Motivation</h2><p>Help me serve you better.</p></div>
+      </div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Why are you moving?</label>
+          <div class="chips">
+            <input type="radio" name="buyReason" id="br-job" value="Job relocation" /><label for="br-job" class="chip">Job relocation</label>
+            <input type="radio" name="buyReason" id="br-family" value="Growing family" /><label for="br-family" class="chip">Growing family</label>
+            <input type="radio" name="buyReason" id="br-upgrade" value="Upgrading" /><label for="br-upgrade" class="chip">Upgrading</label>
+            <input type="radio" name="buyReason" id="br-invest" value="Investment" /><label for="br-invest" class="chip">Investment</label>
+            <input type="radio" name="buyReason" id="br-downsizing" value="Downsizing" /><label for="br-downsizing" class="chip">Downsizing</label>
+            <input type="radio" name="buyReason" id="br-other" value="Other" /><label for="br-other" class="chip">Other</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Have you bought a home before?</label>
+          <div class="toggle-group">
+            <input type="radio" name="firstTime" id="ft-yes" value="Yes" /><label for="ft-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="firstTime" id="ft-no" value="No — first time!" /><label for="ft-no" class="toggle-btn">No — first time!</label>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+      <div class="section-header" style="margin-bottom:24px">
+        <div class="section-icon">⚡</div>
+        <div class="section-title"><h2>Decision Style</h2><p>Helps me prioritize and support you.</p></div>
+      </div>
+      <div class="field-grid col-2">
+        <div class="field">
+          <label>Where are you in the process?</label>
+          <div class="chips">
+            <input type="radio" name="readiness" id="rd-ready" value="Ready to move now" /><label for="rd-ready" class="chip">Ready to move now</label>
+            <input type="radio" name="readiness" id="rd-soon" value="Ready within 60 days" /><label for="rd-soon" class="chip">Ready within 60 days</label>
+            <input type="radio" name="readiness" id="rd-explore" value="Just exploring" /><label for="rd-explore" class="chip">Just exploring</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>How serious are you? (1 = just looking, 10 = ready today)</label>
+          <div class="range-display">
+            <span>1</span>
+            <span id="seriousnessVal">5</span>
+            <span>10</span>
+          </div>
+          <input type="range" name="seriousness" id="seriousnessSlider" min="1" max="10" value="5" oninput="document.getElementById('seriousnessVal').textContent=this.value" />
+        </div>
+        <div class="field span-2">
+          <label>Anything else we should know?</label>
+          <textarea name="buyerNotes" placeholder="Additional context, questions, or special circumstances…"></textarea>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="submit" class="btn btn-primary" id="submitBtn">Submit →</button>
+      </div>
+    </div>
+
+    <!-- ══ SELLER PANELS ══ -->
+
+    <!-- S0: Property Details -->
+    <div class="panel" id="panel-seller-0">
+      <div class="section-header">
+        <div class="section-icon">🏠</div>
+        <div class="section-title"><h2>Property Details</h2><p>Tell me about what you're selling.</p></div>
+      </div>
+      <div class="field-grid col-2">
+        <div class="field span-2">
+          <label>Property Address <span class="req">*</span></label>
+          <input type="text" name="sellerAddress" id="sellerAddress" placeholder="123 Oak Lane, Richmond, TX 77407" />
+          <span class="err">Please enter the property address.</span>
+        </div>
+        <div class="field">
+          <label>Property Type</label>
+          <div class="chips">
+            <input type="radio" name="propType" id="pt-sfh" value="Single Family" /><label for="pt-sfh" class="chip">Single Family</label>
+            <input type="radio" name="propType" id="pt-condo" value="Condo" /><label for="pt-condo" class="chip">Condo</label>
+            <input type="radio" name="propType" id="pt-townhome" value="Townhome" /><label for="pt-townhome" class="chip">Townhome</label>
+            <input type="radio" name="propType" id="pt-multi" value="Multi-Family" /><label for="pt-multi" class="chip">Multi-Family</label>
+            <input type="radio" name="propType" id="pt-land" value="Land" /><label for="pt-land" class="chip">Land</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Year Built</label>
+          <input type="text" name="yearBuilt" placeholder="e.g. 2004" />
+        </div>
+        <div class="field">
+          <label>Square Footage</label>
+          <input type="text" name="sqft" placeholder="e.g. 2,450 sq ft" />
+        </div>
+        <div class="field">
+          <label>Bedrooms / Bathrooms</label>
+          <input type="text" name="bedsBaths" placeholder="e.g. 4 bed / 2.5 bath" />
+        </div>
+        <div class="field">
+          <label>Pool?</label>
+          <div class="toggle-group">
+            <input type="radio" name="sellerPool" id="sp-yes" value="Yes" /><label for="sp-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="sellerPool" id="sp-no" value="No" /><label for="sp-no" class="toggle-btn">No</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>HOA?</label>
+          <div class="toggle-group">
+            <input type="radio" name="sellerHoa" id="sh-yes" value="Yes" onchange="toggleCond('cond-hoa-fee',true)" /><label for="sh-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="sellerHoa" id="sh-no" value="No" onchange="toggleCond('cond-hoa-fee',false)" /><label for="sh-no" class="toggle-btn">No</label>
+          </div>
+        </div>
+        <div class="cond span-2" id="cond-hoa-fee" style="grid-column:span 2">
+          <div class="field" style="margin-top:12px">
+            <label>HOA Monthly Fee</label>
+            <input type="text" name="hoaFee" placeholder="e.g. $120/month" />
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="button" class="btn btn-primary" onclick="next()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- S1: Mortgage & Financial -->
+    <div class="panel" id="panel-seller-1">
+      <div class="section-header">
+        <div class="section-icon">💰</div>
+        <div class="section-title"><h2>Mortgage & Financials</h2><p>Helps us understand your net position.</p></div>
+      </div>
+      <div class="field-grid col-2">
+        <div class="field">
+          <label>Do you have a mortgage on this property?</label>
+          <div class="toggle-group">
+            <input type="radio" name="hasMortgage" id="hm-yes" value="Yes" onchange="toggleCond('cond-loan',true)" /><label for="hm-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="hasMortgage" id="hm-no" value="No" onchange="toggleCond('cond-loan',false)" /><label for="hm-no" class="toggle-btn">No</label>
+          </div>
+        </div>
+        <div class="cond" id="cond-loan">
+          <div class="field" style="margin-top:12px">
+            <label>Estimated Loan Balance</label>
+            <input type="text" name="loanBalance" placeholder="e.g. $180,000" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Is the home owner-occupied or tenant-occupied?</label>
+          <div class="chips">
+            <input type="radio" name="occupancy" id="oc-owner" value="Owner-occupied" /><label for="oc-owner" class="chip">Owner-Occupied</label>
+            <input type="radio" name="occupancy" id="oc-tenant" value="Tenant-occupied" /><label for="oc-tenant" class="chip">Tenant-Occupied</label>
+            <input type="radio" name="occupancy" id="oc-vacant" value="Vacant" /><label for="oc-vacant" class="chip">Vacant</label>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="button" class="btn btn-primary" onclick="next()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- S2: Condition -->
+    <div class="panel" id="panel-seller-2">
+      <div class="section-header">
+        <div class="section-icon">🔧</div>
+        <div class="section-title"><h2>Property Condition</h2><p>Helps us price and market accurately.</p></div>
+      </div>
+      <div class="field-grid col-2">
+        <div class="field span-2">
+          <label>Major updates in the last 5 years?</label>
+          <div class="chips">
+            <input type="checkbox" name="updates" id="upd-kitchen" value="Kitchen remodel" /><label for="upd-kitchen" class="chip">Kitchen</label>
+            <input type="checkbox" name="updates" id="upd-bath" value="Bathroom remodel" /><label for="upd-bath" class="chip">Bathrooms</label>
+            <input type="checkbox" name="updates" id="upd-floors" value="New floors" /><label for="upd-floors" class="chip">Floors</label>
+            <input type="checkbox" name="updates" id="upd-paint" value="Fresh paint" /><label for="upd-paint" class="chip">Paint</label>
+            <input type="checkbox" name="updates" id="upd-windows" value="Windows" /><label for="upd-windows" class="chip">Windows</label>
+            <input type="checkbox" name="updates" id="upd-addition" value="Addition" /><label for="upd-addition" class="chip">Addition</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Roof Age (approx.)</label>
+          <select name="roofAge">
+            <option value="">— Select —</option>
+            <option>0–3 years</option><option>4–7 years</option><option>8–12 years</option><option>13–20 years</option><option>20+ years</option><option>Unknown</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>HVAC Age (approx.)</label>
+          <select name="hvacAge">
+            <option value="">— Select —</option>
+            <option>0–3 years</option><option>4–7 years</option><option>8–12 years</option><option>13–20 years</option><option>20+ years</option><option>Unknown</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Any known foundation issues?</label>
+          <div class="toggle-group">
+            <input type="radio" name="foundation" id="fi-yes" value="Yes" /><label for="fi-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="foundation" id="fi-no" value="No" /><label for="fi-no" class="toggle-btn">No</label>
+            <input type="radio" name="foundation" id="fi-prev" value="Previously repaired" /><label for="fi-prev" class="toggle-btn">Previously Repaired</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Previous insurance claims?</label>
+          <div class="toggle-group">
+            <input type="radio" name="insClaims" id="ic-yes" value="Yes" /><label for="ic-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="insClaims" id="ic-no" value="No" /><label for="ic-no" class="toggle-btn">No</label>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="button" class="btn btn-primary" onclick="next()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- S3: Timeline + Motivation -->
+    <div class="panel" id="panel-seller-3">
+      <div class="section-header">
+        <div class="section-icon">🎯</div>
+        <div class="section-title"><h2>Timeline & Goals</h2><p>Let's make sure this works for your life.</p></div>
+      </div>
+      <div class="field-grid col-2">
+        <div class="field">
+          <label>When do you want to list?</label>
+          <div class="chips">
+            <input type="radio" name="listTimeline" id="lt-now" value="ASAP" /><label for="lt-now" class="chip">ASAP</label>
+            <input type="radio" name="listTimeline" id="lt-30" value="Within 30 days" /><label for="lt-30" class="chip">Within 30 days</label>
+            <input type="radio" name="listTimeline" id="lt-60" value="30–60 days" /><label for="lt-60" class="chip">30–60 days</label>
+            <input type="radio" name="listTimeline" id="lt-90" value="60–90 days" /><label for="lt-90" class="chip">60–90 days</label>
+            <input type="radio" name="listTimeline" id="lt-flex" value="Flexible" /><label for="lt-flex" class="chip">Flexible</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Do you need to buy another home?</label>
+          <div class="toggle-group">
+            <input type="radio" name="needToBuy" id="nb-yes" value="Yes" /><label for="nb-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="needToBuy" id="nb-no" value="No" /><label for="nb-no" class="toggle-btn">No</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Are you interviewing other agents?</label>
+          <div class="toggle-group">
+            <input type="radio" name="otherAgents" id="oa2-yes" value="Yes" /><label for="oa2-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="otherAgents" id="oa2-no" value="No" /><label for="oa2-no" class="toggle-btn">No</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Why are you selling?</label>
+          <div class="chips">
+            <input type="radio" name="sellReason" id="sr-relocate" value="Relocation" /><label for="sr-relocate" class="chip">Relocation</label>
+            <input type="radio" name="sellReason" id="sr-downsize" value="Downsizing" /><label for="sr-downsize" class="chip">Downsizing</label>
+            <input type="radio" name="sellReason" id="sr-upgrade" value="Upgrading" /><label for="sr-upgrade" class="chip">Upgrading</label>
+            <input type="radio" name="sellReason" id="sr-financial" value="Financial" /><label for="sr-financial" class="chip">Financial</label>
+            <input type="radio" name="sellReason" id="sr-life" value="Life change" /><label for="sr-life" class="chip">Life change</label>
+          </div>
+        </div>
+        <div class="field span-2">
+          <label>What matters most to you in this sale?</label>
+          <div class="chips">
+            <input type="radio" name="sellPriority" id="spri-price" value="Best price" /><label for="spri-price" class="chip">Best Price</label>
+            <input type="radio" name="sellPriority" id="spri-speed" value="Fastest sale" /><label for="spri-speed" class="chip">Speed</label>
+            <input type="radio" name="sellPriority" id="spri-conv" value="Convenience" /><label for="spri-conv" class="chip">Convenience</label>
+            <input type="radio" name="sellPriority" id="spri-terms" value="Favorable terms" /><label for="spri-terms" class="chip">Favorable Terms</label>
+          </div>
+        </div>
+        <div class="field span-2">
+          <label>How serious are you? (1 = just curious, 10 = ready to sign today)</label>
+          <div class="range-display"><span>1</span><span id="sellerSeriousVal">5</span><span>10</span></div>
+          <input type="range" name="sellerSeriousness" min="1" max="10" value="5" oninput="document.getElementById('sellerSeriousVal').textContent=this.value" />
+        </div>
+        <div class="field span-2">
+          <label>Anything else we should know?</label>
+          <textarea name="sellerNotes" placeholder="Additional context, concerns, questions…"></textarea>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="submit" class="btn btn-primary" id="submitBtn2">Submit →</button>
+      </div>
+    </div>
+
+    <!-- ══ LANDLORD PANELS ══ -->
+
+    <!-- L0: Property Info -->
+    <div class="panel" id="panel-landlord-0">
+      <div class="section-header">
+        <div class="section-icon">🏢</div>
+        <div class="section-title"><h2>Property Info</h2><p>Tell me about the property you want to rent out.</p></div>
+      </div>
+      <div class="field-grid col-2">
+        <div class="field span-2">
+          <label>Property Address <span class="req">*</span></label>
+          <input type="text" name="landlordAddress" id="landlordAddress" placeholder="456 Elm St, Richmond, TX 77407" />
+          <span class="err">Please enter the property address.</span>
+        </div>
+        <div class="field">
+          <label>Property Type</label>
+          <div class="chips">
+            <input type="radio" name="landlordType" id="ll-sfh" value="Single Family" /><label for="ll-sfh" class="chip">Single Family</label>
+            <input type="radio" name="landlordType" id="ll-condo" value="Condo" /><label for="ll-condo" class="chip">Condo</label>
+            <input type="radio" name="landlordType" id="ll-townhome" value="Townhome" /><label for="ll-townhome" class="chip">Townhome</label>
+            <input type="radio" name="landlordType" id="ll-multi" value="Multi-Family" /><label for="ll-multi" class="chip">Multi-Family</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Bedrooms / Bathrooms</label>
+          <input type="text" name="landlordBedBath" placeholder="e.g. 3 bed / 2 bath" />
+        </div>
+        <div class="field">
+          <label>Current Condition</label>
+          <div class="chips">
+            <input type="radio" name="llCondition" id="llc-exc" value="Excellent" /><label for="llc-exc" class="chip">Excellent</label>
+            <input type="radio" name="llCondition" id="llc-good" value="Good" /><label for="llc-good" class="chip">Good</label>
+            <input type="radio" name="llCondition" id="llc-fair" value="Fair" /><label for="llc-fair" class="chip">Fair / Needs work</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Is the property currently vacant?</label>
+          <div class="toggle-group">
+            <input type="radio" name="llVacant" id="llv-yes" value="Yes" /><label for="llv-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="llVacant" id="llv-no" value="No" /><label for="llv-no" class="toggle-btn">No — has tenants</label>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="button" class="btn btn-primary" onclick="next()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- L1: Financial Goals + Management -->
+    <div class="panel" id="panel-landlord-1">
+      <div class="section-header">
+        <div class="section-icon">📊</div>
+        <div class="section-title"><h2>Financial Goals & Management</h2><p>Let's align on your rental strategy.</p></div>
+      </div>
+      <div class="field-grid col-2">
+        <div class="field">
+          <label>Desired Monthly Rent</label>
+          <input type="text" name="desiredRent" placeholder="e.g. $2,200/month" />
+        </div>
+        <div class="field">
+          <label>Security Deposit Amount</label>
+          <input type="text" name="securityDeposit" placeholder="e.g. one month's rent" />
+        </div>
+        <div class="field">
+          <label>Minimum Lease Term</label>
+          <div class="chips">
+            <input type="radio" name="leaseTerm" id="lt-6mo" value="6 months" /><label for="lt-6mo" class="chip">6 months</label>
+            <input type="radio" name="leaseTerm" id="lt-12mo" value="12 months" /><label for="lt-12mo" class="chip">12 months</label>
+            <input type="radio" name="leaseTerm" id="lt-24mo" value="24 months" /><label for="lt-24mo" class="chip">24 months</label>
+            <input type="radio" name="leaseTerm" id="lt-flex2" value="Flexible" /><label for="lt-flex2" class="chip">Flexible</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Will you accept Section 8 / Housing Choice Vouchers?</label>
+          <div class="toggle-group">
+            <input type="radio" name="section8" id="s8-yes" value="Yes" /><label for="s8-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="section8" id="s8-no" value="No" /><label for="s8-no" class="toggle-btn">No</label>
+            <input type="radio" name="section8" id="s8-open" value="Open to it" /><label for="s8-open" class="toggle-btn">Open to it</label>
+          </div>
+        </div>
+
+        <hr class="divider span-2" style="grid-column:span 2" />
+
+        <div class="field span-2">
+          <label>Do you want full property management services?</label>
+          <div class="chips">
+            <input type="radio" name="mgmtService" id="mg-full" value="Full management" /><label for="mg-full" class="chip">Full Management</label>
+            <input type="radio" name="mgmtService" id="mg-tenant" value="Tenant placement only" /><label for="mg-tenant" class="chip">Tenant Placement Only</label>
+            <input type="radio" name="mgmtService" id="mg-self" value="Self-manage" /><label for="mg-self" class="chip">I'll Self-Manage</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Pets allowed?</label>
+          <div class="chips">
+            <input type="radio" name="pets" id="pet-yes" value="Yes" /><label for="pet-yes" class="chip">Yes</label>
+            <input type="radio" name="pets" id="pet-case" value="Case by case" /><label for="pet-case" class="chip">Case by Case</label>
+            <input type="radio" name="pets" id="pet-no" value="No" /><label for="pet-no" class="chip">No</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Any other restrictions?</label>
+          <input type="text" name="restrictions" placeholder="e.g. no smoking, max 2 occupants" />
+        </div>
+        <div class="field">
+          <label>HOA leasing restrictions?</label>
+          <div class="toggle-group">
+            <input type="radio" name="hoaRestrict" id="hr-yes" value="Yes" /><label for="hr-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="hoaRestrict" id="hr-no" value="No" /><label for="hr-no" class="toggle-btn">No</label>
+            <input type="radio" name="hoaRestrict" id="hr-idk" value="Not sure" /><label for="hr-idk" class="toggle-btn">Not sure</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Previous eviction history on this property?</label>
+          <div class="toggle-group">
+            <input type="radio" name="prevEviction" id="pe-yes" value="Yes" /><label for="pe-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="prevEviction" id="pe-no" value="No" /><label for="pe-no" class="toggle-btn">No</label>
+          </div>
+        </div>
+        <div class="field span-2">
+          <label>How serious are you? (1 = just exploring, 10 = ready to list now)</label>
+          <div class="range-display"><span>1</span><span id="llSeriousVal">5</span><span>10</span></div>
+          <input type="range" name="llSeriousness" min="1" max="10" value="5" oninput="document.getElementById('llSeriousVal').textContent=this.value" />
+        </div>
+        <div class="field span-2">
+          <label>Anything else we should know?</label>
+          <textarea name="landlordNotes" placeholder="Special requirements, notes, questions…"></textarea>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="submit" class="btn btn-primary" id="submitBtn3">Submit →</button>
+      </div>
+    </div>
+
+    <!-- ══ TENANT PANELS ══ -->
+
+    <!-- T0: Housing Needs -->
+    <div class="panel" id="panel-tenant-0">
+      <div class="section-header">
+        <div class="section-icon">🔍</div>
+        <div class="section-title"><h2>Housing Needs</h2><p>Let's find you the right place.</p></div>
+      </div>
+      <div class="field-grid col-2">
+        <div class="field span-2">
+          <label>Desired Cities or Zip Codes</label>
+          <input type="text" name="tenantAreas" placeholder="e.g. Houston, Sugar Land, Richmond, 77407" />
+        </div>
+        <div class="field">
+          <label>Maximum Monthly Budget</label>
+          <input type="text" name="tenantBudget" placeholder="e.g. $1,800/month" />
+        </div>
+        <div class="field">
+          <label>Desired Move-In Date</label>
+          <input type="text" name="moveInDate" placeholder="e.g. February 1, 2025" />
+        </div>
+        <div class="field">
+          <label>Preferred Lease Term</label>
+          <div class="chips">
+            <input type="radio" name="tenantLease" id="tl-6" value="6 months" /><label for="tl-6" class="chip">6 months</label>
+            <input type="radio" name="tenantLease" id="tl-12" value="12 months" /><label for="tl-12" class="chip">12 months</label>
+            <input type="radio" name="tenantLease" id="tl-24" value="24 months" /><label for="tl-24" class="chip">24 months</label>
+            <input type="radio" name="tenantLease" id="tl-mth" value="Month-to-month" /><label for="tl-mth" class="chip">Month-to-month</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Bedrooms Needed</label>
+          <select name="tenantBeds">
+            <option value="">— Select —</option>
+            <option>Studio</option><option>1 bed</option><option>2 bed</option><option>3 bed</option><option>4+ bed</option>
+          </select>
+        </div>
+      </div>
+      <hr class="divider" />
+      <p style="font-size:12px;color:var(--muted2);margin-bottom:20px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase">Additional Filters</p>
+      <div class="field-grid col-2">
+        <div class="field">
+          <label>Washer/Dryer required?</label>
+          <div class="toggle-group">
+            <input type="radio" name="wdRequired" id="wd-yes" value="Yes" /><label for="wd-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="wdRequired" id="wd-no" value="No" /><label for="wd-no" class="toggle-btn">No</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Garage required?</label>
+          <div class="toggle-group">
+            <input type="radio" name="garageRequired" id="gr-yes" value="Yes" /><label for="gr-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="garageRequired" id="gr-no" value="No" /><label for="gr-no" class="toggle-btn">No</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Gated community preferred?</label>
+          <div class="toggle-group">
+            <input type="radio" name="gated" id="gc-yes" value="Yes" /><label for="gc-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="gated" id="gc-no" value="No" /><label for="gc-no" class="toggle-btn">No</label>
+            <input type="radio" name="gated" id="gc-any" value="No preference" /><label for="gc-any" class="toggle-btn">No preference</label>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="button" class="btn btn-primary" onclick="next()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- T1: Qualifications + Household -->
+    <div class="panel" id="panel-tenant-1">
+      <div class="section-header">
+        <div class="section-icon">📋</div>
+        <div class="section-title"><h2>Qualifications & Household</h2><p>This helps us match you with listings.</p></div>
+      </div>
+      <div class="field-grid col-2">
+        <div class="field">
+          <label>Gross Monthly Income</label>
+          <select name="monthlyIncome">
+            <option value="">— Select —</option>
+            <option>Under $2,000</option><option>$2,000 – $3,500</option><option>$3,500 – $5,000</option>
+            <option>$5,000 – $7,500</option><option>$7,500 – $10,000</option><option>$10,000+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Employment Status</label>
+          <div class="chips">
+            <input type="radio" name="employment" id="em-full" value="Full-time employed" /><label for="em-full" class="chip">Full-Time</label>
+            <input type="radio" name="employment" id="em-part" value="Part-time employed" /><label for="em-part" class="chip">Part-Time</label>
+            <input type="radio" name="employment" id="em-self" value="Self-employed" /><label for="em-self" class="chip">Self-Employed</label>
+            <input type="radio" name="employment" id="em-ret" value="Retired" /><label for="em-ret" class="chip">Retired</label>
+            <input type="radio" name="employment" id="em-other2" value="Other" /><label for="em-other2" class="chip">Other</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Approximate Credit Score Range</label>
+          <div class="chips">
+            <input type="radio" name="creditRange" id="cr-exc" value="Excellent (740+)" /><label for="cr-exc" class="chip">Excellent (740+)</label>
+            <input type="radio" name="creditRange" id="cr-good" value="Good (700–739)" /><label for="cr-good" class="chip">Good (700–739)</label>
+            <input type="radio" name="creditRange" id="cr-fair" value="Fair (650–699)" /><label for="cr-fair" class="chip">Fair (650–699)</label>
+            <input type="radio" name="creditRange" id="cr-poor" value="Below 650" /><label for="cr-poor" class="chip">Below 650</label>
+            <input type="radio" name="creditRange" id="cr-none" value="No credit" /><label for="cr-none" class="chip">No credit history</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Any evictions in the last 5 years?</label>
+          <div class="toggle-group">
+            <input type="radio" name="evictions" id="ev-yes" value="Yes" /><label for="ev-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="evictions" id="ev-no" value="No" /><label for="ev-no" class="toggle-btn">No</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Criminal history?</label>
+          <div class="toggle-group">
+            <input type="radio" name="criminal" id="cr2-yes" value="Yes" /><label for="cr2-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="criminal" id="cr2-no" value="No" /><label for="cr2-no" class="toggle-btn">No</label>
+          </div>
+        </div>
+
+        <hr class="divider span-2" style="grid-column:span 2" />
+
+        <div class="field">
+          <label>Number of Occupants (total)</label>
+          <select name="numOccupants">
+            <option value="">— Select —</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Pets?</label>
+          <div class="toggle-group">
+            <input type="radio" name="hasPets" id="hp-yes" value="Yes" onchange="toggleCond('cond-pets', true)" /><label for="hp-yes" class="toggle-btn">Yes</label>
+            <input type="radio" name="hasPets" id="hp-no" value="No" onchange="toggleCond('cond-pets', false)" /><label for="hp-no" class="toggle-btn">No</label>
+          </div>
+        </div>
+        <div class="cond span-2" id="cond-pets" style="grid-column:span 2">
+          <div class="field" style="margin-top:12px">
+            <label>Pet type(s) and weight</label>
+            <input type="text" name="petDetails" placeholder="e.g. 1 dog, 35 lbs; 1 cat, 10 lbs" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Number of Vehicles</label>
+          <select name="vehicles">
+            <option value="">— Select —</option>
+            <option>1</option><option>2</option><option>3+</option>
+          </select>
+        </div>
+        <div class="field span-2">
+          <label>How serious are you? (1 = just browsing, 10 = need a place ASAP)</label>
+          <div class="range-display"><span>1</span><span id="tenantSeriousVal">5</span><span>10</span></div>
+          <input type="range" name="tenantSeriousness" min="1" max="10" value="5" oninput="document.getElementById('tenantSeriousVal').textContent=this.value" />
+        </div>
+        <div class="field span-2">
+          <label>Anything else we should know?</label>
+          <textarea name="tenantNotes" placeholder="Unique situation, questions, or context that would help us find you the right home…"></textarea>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="back()">← Back</button>
+        <button type="submit" class="btn btn-primary" id="submitBtn4">Submit →</button>
+      </div>
+    </div>
+
+    <!-- ══ CONFIRMATION ══ -->
+    <div class="panel" id="panel-confirm">
+      <div class="confirm-screen">
+        <div class="confirm-checkmark">✓</div>
+        <h2>You're all set, <em id="confirmName">friend</em>.</h2>
+        <p>Thank you for sharing your details — I'll review everything and be in touch very soon. Keep an eye on your inbox and phone.</p>
+      </div>
+    </div>
+
+    </form><!-- /theForm -->
+  </div>
+</main>
+</div>
+
+<script>
+// ──────────────────────────────────────────────────────
+// State
+// ──────────────────────────────────────────────────────
+let clientType = null;  // 'buyer' | 'seller' | 'landlord' | 'tenant'
+let history = [];       // stack of panel IDs we've visited
+let currentPanel = 'panel-0';
+
+// Panel paths per type (after 'panel-1')
+const paths = {
+  buyer:    ['panel-buyer-0','panel-buyer-1','panel-buyer-2','panel-buyer-3'],
+  seller:   ['panel-seller-0','panel-seller-1','panel-seller-2','panel-seller-3'],
+  landlord: ['panel-landlord-0','panel-landlord-1'],
+  tenant:   ['panel-tenant-0','panel-tenant-1'],
+};
+
+// Human-readable nav labels
+const navLabels = {
+  'panel-0': { icon: '👤', title: 'Your Info', sub: 'Contact details' },
+  'panel-1': { icon: '🏡', title: 'Client Type', sub: 'How can I help?' },
+  'panel-buyer-0':    { icon: '💳', title: 'Financing',          sub: 'Budget & approval' },
+  'panel-buyer-1':    { icon: '📅', title: 'Timeline',           sub: 'When to buy' },
+  'panel-buyer-2':    { icon: '🗺️', title: 'Preferences',        sub: 'Your wish list' },
+  'panel-buyer-3':    { icon: '💬', title: 'Motivation',         sub: 'Why you\'re moving' },
+  'panel-seller-0':   { icon: '🏠', title: 'Property Details',   sub: 'What you\'re selling' },
+  'panel-seller-1':   { icon: '💰', title: 'Financials',         sub: 'Mortgage & equity' },
+  'panel-seller-2':   { icon: '🔧', title: 'Condition',          sub: 'Property state' },
+  'panel-seller-3':   { icon: '🎯', title: 'Timeline & Goals',   sub: 'Your priorities' },
+  'panel-landlord-0': { icon: '🏢', title: 'Property Info',      sub: 'What you own' },
+  'panel-landlord-1': { icon: '📊', title: 'Goals & Management', sub: 'Rental strategy' },
+  'panel-tenant-0':   { icon: '🔍', title: 'Housing Needs',      sub: 'What you need' },
+  'panel-tenant-1':   { icon: '📋', title: 'Qualifications',     sub: 'Household info' },
+};
+
+// ──────────────────────────────────────────────────────
+// Navigation
+// ──────────────────────────────────────────────────────
+function getNextPanel(id) {
+  if (id === 'panel-0') return 'panel-1';
+  if (id === 'panel-1') {
+    if (!clientType) return null;
+    return paths[clientType][0];
+  }
+  const path = paths[clientType];
+  if (!path) return null;
+  const idx = path.indexOf(id);
+  if (idx === -1 || idx === path.length - 1) return null;
+  return path[idx + 1];
+}
+
+function next() {
+  if (!validatePanel(currentPanel)) return;
+  const nextId = getNextPanel(currentPanel);
+  if (!nextId) return;
+  switchPanel(currentPanel, nextId, 'forward');
+}
+
+function back() {
+  if (history.length === 0) return;
+  const prev = history.pop();
+  switchPanel(currentPanel, prev, 'back');
+}
+
+function switchPanel(fromId, toId, dir) {
+  const from = document.getElementById(fromId);
+  const to = document.getElementById(toId);
+  if (!from || !to) return;
+
+  if (dir === 'forward') history.push(fromId);
+
+  from.classList.remove('active');
+  from.style.display = 'none';
+
+  to.style.display = 'block';
+  to.classList.add('active');
+  to.classList.remove('back-enter');
+  void to.offsetWidth; // reflow
+  if (dir === 'back') to.classList.add('back-enter');
+
+  currentPanel = toId;
+  updateHeader(toId);
+  updateProgress(toId);
+  updateSidebar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ──────────────────────────────────────────────────────
+// Client type
+// ──────────────────────────────────────────────────────
+function setClientType(type) {
+  clientType = type;
+  document.getElementById('typeErr').style.display = 'none';
+  updateSidebar();
+}
+
+// ──────────────────────────────────────────────────────
+// Header + progress
+// ──────────────────────────────────────────────────────
+const headerMeta = {
+  'panel-0':          { badge: 'Step 1',  title: 'Let\'s get to <em>know you.</em>', sub: 'A few quick details to get us started.' },
+  'panel-1':          { badge: 'Step 2',  title: 'What brings you <em>here?</em>',  sub: 'Select the option that best describes you.' },
+  'panel-buyer-0':    { badge: 'Buyer · Financing',    title: 'Let\'s talk <em>buying power.</em>',      sub: 'Your budget and pre-approval status.' },
+  'panel-buyer-1':    { badge: 'Buyer · Timeline',     title: 'When do you want to <em>move?</em>',      sub: 'Help me plan around your schedule.' },
+  'panel-buyer-2':    { badge: 'Buyer · Preferences',  title: 'Describe your <em>dream home.</em>',      sub: 'The more detail, the better I can search.' },
+  'panel-buyer-3':    { badge: 'Buyer · Motivation',   title: 'Almost <em>done.</em>',                   sub: 'Help me understand your situation.' },
+  'panel-seller-0':   { badge: 'Seller · Property',    title: 'Tell me about <em>your home.</em>',       sub: 'Property details help me price accurately.' },
+  'panel-seller-1':   { badge: 'Seller · Financials',  title: 'The <em>numbers.</em>',                   sub: 'Mortgage and equity info stays confidential.' },
+  'panel-seller-2':   { badge: 'Seller · Condition',   title: 'How does it <em>show?</em>',              sub: 'Helps buyers and sets expectations.' },
+  'panel-seller-3':   { badge: 'Seller · Goals',       title: 'What matters <em>most?</em>',             sub: 'Timeline, motivation, and priorities.' },
+  'panel-landlord-0': { badge: 'Landlord · Property',  title: 'Your rental <em>property.</em>',          sub: 'Details about what you\'re listing.' },
+  'panel-landlord-1': { badge: 'Landlord · Strategy',  title: 'Your rental <em>goals.</em>',             sub: 'Financial targets and management preferences.' },
+  'panel-tenant-0':   { badge: 'Tenant · Search',      title: 'What are you <em>looking for?</em>',      sub: 'Tell me about your ideal rental.' },
+  'panel-tenant-1':   { badge: 'Tenant · Qualifications', title: 'Almost <em>there.</em>',               sub: 'Helps us match you with the right listings.' },
+};
+
+function updateHeader(id) {
+  const m = headerMeta[id];
+  if (!m) return;
+  document.getElementById('stepBadge').textContent = m.badge;
+  document.getElementById('pageTitle').innerHTML = m.title;
+  document.getElementById('pageSubtitle').textContent = m.sub;
+}
+
+function updateProgress(id) {
+  const allPanels = ['panel-0','panel-1'].concat(
+    clientType ? paths[clientType] : []
+  );
+  const total = allPanels.length;
+  const idx = allPanels.indexOf(id);
+  const pct = total <= 1 ? 10 : Math.round(((idx + 1) / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ──────────────────────────────────────────────────────
+// Sidebar nav
+// ──────────────────────────────────────────────────────
+function updateSidebar() {
+  const nav = document.getElementById('stepsNav');
+  const allPanels = ['panel-0','panel-1'].concat(
+    clientType ? paths[clientType] : []
+  );
+
+  nav.innerHTML = '';
+  allPanels.forEach((id, i) => {
+    const label = navLabels[id] || { icon: '•', title: id, sub: '' };
+    const visitedIdx = history.indexOf(id);
+    const isDone = history.includes(id);
+    const isActive = id === currentPanel;
+    const isLast = i === allPanels.length - 1;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'nav-item' + (isActive ? ' active' : '') + (isDone ? ' done' : '');
+
+    wrap.innerHTML = `
+      <div class="nav-dot-wrap">
+        <div class="nav-dot">${isDone ? '✓' : (i + 1)}</div>
+        ${!isLast ? '<div class="nav-line"></div>' : ''}
+      </div>
+      <div class="nav-text">
+        <strong>${label.title}</strong>
+        <small>${label.sub}</small>
+      </div>
+    `;
+
+    nav.appendChild(wrap);
+  });
+}
+
+// ──────────────────────────────────────────────────────
+// Conditional reveal
+// ──────────────────────────────────────────────────────
+function toggleCond(id, show) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('open', show);
+}
+
+// Agent field conditional
+document.querySelectorAll('input[name="otherAgent"]').forEach(r => {
+  r.addEventListener('change', () => {
+    toggleCond('cond-otherAgent', r.value === 'Yes' && r.checked);
+  });
+});
+
+// ──────────────────────────────────────────────────────
+// Validation
+// ──────────────────────────────────────────────────────
+function validatePanel(id) {
+  let ok = true;
+
+  if (id === 'panel-0') {
+    ok = requireField('fullName', v => v.trim().length > 1) && ok;
+    ok = requireField('phone',    v => v.trim().length > 6) && ok;
+    ok = requireField('email',    v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) && ok;
+  }
+
+  if (id === 'panel-1') {
+    if (!clientType) {
+      document.getElementById('typeErr').style.display = 'block';
+      ok = false;
+    }
+  }
+
+  if (id === 'panel-seller-0') {
+    ok = requireField('sellerAddress', v => v.trim().length > 5) && ok;
+  }
+
+  if (id === 'panel-landlord-0') {
+    ok = requireField('landlordAddress', v => v.trim().length > 5) && ok;
+  }
+
+  return ok;
+}
+
+function requireField(id, test) {
+  const el = document.getElementById(id);
+  const field = document.getElementById('f-' + id);
+  if (!el || !field) return true;
+  const valid = test(el.value);
+  field.classList.toggle('has-error', !valid);
+  el.addEventListener('input', () => {
+    if (test(el.value)) field.classList.remove('has-error');
+  });
+  return valid;
+}
+
+// ──────────────────────────────────────────────────────
+// Submission
+// ──────────────────────────────────────────────────────
+document.getElementById('theForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!validatePanel(currentPanel)) return;
+
+  const btns = document.querySelectorAll('[id^=submitBtn]');
+  btns.forEach(b => { b.disabled = true; b.textContent = 'Sending…'; });
+
+  const name = document.getElementById('fullName')?.value.split(' ')[0] || 'friend';
+
+  try {
+    const res = await fetch(e.target.action, {
+      method: 'POST',
+      body: new FormData(e.target),
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (res.ok) {
+      document.getElementById('confirmName').textContent = name;
+      document.getElementById('setupNotice').style.display = 'none';
+      document.getElementById('stepsNav').innerHTML = '';
+      const all = document.querySelectorAll('.panel');
+      all.forEach(p => p.classList.remove('active'));
+      const conf = document.getElementById('panel-confirm');
+      conf.style.display = 'block';
+      conf.classList.add('active');
+      document.getElementById('progressFill').style.width = '100%';
+      document.getElementById('stepBadge').textContent = 'Complete';
+      document.getElementById('pageTitle').innerHTML = 'Submission <em>received.</em>';
+      document.getElementById('pageSubtitle').textContent = '';
+    } else {
+      btns.forEach(b => { b.disabled = false; b.textContent = 'Try again'; });
+    }
+  } catch {
+    btns.forEach(b => { b.disabled = false; b.textContent = 'Try again'; });
+  }
+});
+
+// ──────────────────────────────────────────────────────
+// Init
+// ──────────────────────────────────────────────────────
+updateSidebar();
+</script>
+</body>
+</html>
